@@ -105,7 +105,10 @@ class Register extends StatelessWidget {
                     ),
                     TextButton(
                         onPressed: () {
-                          if (formKeyy.currentState!.validate()) {}
+                          if (formKeyy.currentState!.validate()) {
+                            RegisterCubit.get(context).userRegister(
+                                emailController.text, passwordController.text);
+                          }
                         },
                         child: const Text('Register'))
                   ]),
@@ -113,7 +116,18 @@ class Register extends StatelessWidget {
               ),
             );
           },
-          listener: (BuildContext context, Object? state) {},
+          listener: (BuildContext context, Object? state) {
+            if (state is BadRegisterState) {
+              Fluttertoast.showToast(
+                  msg: state.e,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            }
+          },
         ),
       ),
     );

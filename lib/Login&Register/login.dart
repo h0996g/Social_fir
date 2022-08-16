@@ -3,6 +3,7 @@ import 'package:firbase_app/Login&Register/cubit/login_cubit.dart';
 import 'package:firbase_app/Login&Register/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../shared/component.dart';
 import 'cubit/login_state.dart';
@@ -96,7 +97,11 @@ class LoginScreen extends StatelessWidget {
                             ConditionalBuilder(
                               builder: (BuildContext context) {
                                 return FloatingActionButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    LoginCubit.get(context).loginUser(
+                                        emailController.text,
+                                        passController.text);
+                                  },
                                   child: const Icon(Icons.arrow_forward_ios),
                                 );
                               },
@@ -128,7 +133,18 @@ class LoginScreen extends StatelessWidget {
             ),
           );
         },
-        listener: (BuildContext context, Object? state) {},
+        listener: (BuildContext context, Object? state) {
+          if (state is BadLoginState) {
+            Fluttertoast.showToast(
+                msg: state.e,
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        },
       ),
     );
   }

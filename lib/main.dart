@@ -1,8 +1,12 @@
+import 'package:bloc/bloc.dart';
 import 'package:firbase_app/Login&Register/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import 'observer.dart';
+
 Future<void> main() async {
+  Bloc.observer = MyBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());

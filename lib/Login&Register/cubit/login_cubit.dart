@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,5 +19,18 @@ class LoginCubit extends Cubit<LoginState> {
       ishidden = !ishidden;
     }
     emit(HiddenPasswordState());
+  }
+
+  void loginUser(String email, String password) {
+    emit(LodinLoginState());
+    FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password)
+        .then((value) {
+      print(value.user!.emailVerified);
+      print(value.user!.email);
+      emit(GoodLoginState());
+    }).catchError((e) {
+      emit(BadLoginState(e.toString()));
+    });
   }
 }

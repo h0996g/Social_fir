@@ -45,6 +45,7 @@ dependencies:
   flutter_hex_color: ^2.0.0
   carousel_slider: ^4.0.0
   firebase_core: ^1.20.0
+  firebase_auth: ^3.4.2
 
 dev_dependencies:
   flutter_test:
