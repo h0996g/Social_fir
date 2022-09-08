@@ -40,8 +40,8 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   void creatUser(String name, String email, String phone, String uId) {
     // emit(LodinCreateUserState());
-    UserModel? model =
-        UserModel(name: name, email: email, phone: phone, uId: uId);
+    UserModel? model = UserModel(
+        name: name, email: email, phone: phone, uId: uId, isVir: false);
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
