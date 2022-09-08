@@ -7,15 +7,15 @@ import 'login_state.dart';
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitial());
   static LoginCubit get(context) => BlocProvider.of(context);
-  Icon iconhidden = Icon(Icons.visibility);
+  Icon iconhidden = const Icon(Icons.visibility);
 
   bool ishidden = true;
   void showpass() {
     if (ishidden) {
-      iconhidden = Icon(Icons.visibility_off);
+      iconhidden = const Icon(Icons.visibility_off);
       ishidden = !ishidden;
     } else {
-      iconhidden = Icon(Icons.visibility);
+      iconhidden = const Icon(Icons.visibility);
       ishidden = !ishidden;
     }
     emit(HiddenPasswordState());
@@ -28,7 +28,7 @@ class LoginCubit extends Cubit<LoginState> {
         .then((value) {
       print(value.user!.emailVerified);
       print(value.user!.email);
-      emit(GoodLoginState());
+      emit(GoodLoginState(value.user!.uid));
     }).catchError((e) {
       emit(BadLoginState(e.toString()));
     });

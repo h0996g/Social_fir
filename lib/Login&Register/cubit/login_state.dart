@@ -6,7 +6,11 @@ class InitialState extends LoginState {}
 
 class ConditionalLodinState extends LoginState {}
 
-class GoodLoginState extends LoginState {}
+class GoodLoginState extends LoginState {
+  final String uid;
+
+  GoodLoginState(this.uid);
+}
 
 class BadLoginState extends LoginState {
   String e;

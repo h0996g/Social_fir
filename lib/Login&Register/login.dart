@@ -1,10 +1,12 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:firbase_app/Login&Register/cubit/login_cubit.dart';
 import 'package:firbase_app/Login&Register/register.dart';
+import 'package:firbase_app/cache/cache_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../home/homeScreen.dart';
 import '../shared/component.dart';
 import 'cubit/login_state.dart';
 
@@ -96,13 +98,23 @@ class LoginScreen extends StatelessWidget {
                             const Spacer(),
                             ConditionalBuilder(
                               builder: (BuildContext context) {
-                                return FloatingActionButton(
-                                  onPressed: () {
-                                    LoginCubit.get(context).loginUser(
-                                        emailController.text,
-                                        passController.text);
+                                return ConditionalBuilder(
+                                  builder: (BuildContext context) {
+                                    return FloatingActionButton(
+                                      onPressed: () {
+                                        LoginCubit.get(context).loginUser(
+                                            emailController.text,
+                                            passController.text);
+                                      },
+                                      child:
+                                          const Icon(Icons.arrow_forward_ios),
+                                    );
                                   },
-                                  child: const Icon(Icons.arrow_forward_ios),
+                                  condition: state is! LodinLoginState,
+                                  fallback: (BuildContext context) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  },
                                 );
                               },
                               condition: state is! ConditionalLodinState,
@@ -134,6 +146,13 @@ class LoginScreen extends StatelessWidget {
           );
         },
         listener: (BuildContext context, Object? state) {
+          if (state is GoodLoginState) {
+            CachHelper.putcache(key: 'uid', value: state.uid);
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const Home()),
+                (route) => false);
+          }
           if (state is BadLoginState) {
             Fluttertoast.showToast(
                 msg: state.e,

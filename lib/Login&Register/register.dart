@@ -1,4 +1,6 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:firbase_app/Login&Register/cubit/register_cubit.dart';
+import 'package:firbase_app/home/homeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -76,7 +78,7 @@ class Register extends StatelessWidget {
                       },
                       lable: const Text('Password'),
                       textInputAction: TextInputAction.next,
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.password,
                       ),
                       sufixIcon: IconButton(
@@ -103,21 +105,41 @@ class Register extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    TextButton(
-                        onPressed: () {
-                          if (formKeyy.currentState!.validate()) {
-                            RegisterCubit.get(context).userRegister(
-                                emailController.text, passwordController.text);
-                          }
-                        },
-                        child: const Text('Register'))
+                    ConditionalBuilder(
+                      builder: (BuildContext context) {
+                        return ConditionalBuilder(
+                          builder: (BuildContext context) {
+                            return TextButton(
+                                onPressed: () {
+                                  if (formKeyy.currentState!.validate()) {
+                                    RegisterCubit.get(context).firstRegister(
+                                        emailController.text,
+                                        passwordController.text,
+                                        name: nameController.text,
+                                        phone: phoneController.text);
+                                  }
+                                },
+                                child: const Text('Register'));
+                          },
+                          condition: state is! LodinFirstRegisterState,
+                          fallback: (BuildContext context) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          },
+                        );
+                      },
+                      condition: true,
+                      fallback: (BuildContext context) {
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                    )
                   ]),
                 ),
               ),
             );
           },
           listener: (BuildContext context, Object? state) {
-            if (state is BadRegisterState) {
+            if (state is BadFirstRegisterState) {
               Fluttertoast.showToast(
                   msg: state.e,
                   toastLength: Toast.LENGTH_SHORT,
@@ -126,6 +148,11 @@ class Register extends StatelessWidget {
                   backgroundColor: Colors.red,
                   textColor: Colors.white,
                   fontSize: 16.0);
+            } else if (state is GoodCreateRegisterState) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Home()),
+                  (route) => false);
             }
           },
         ),
