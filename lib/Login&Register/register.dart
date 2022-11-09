@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../cache/cache_helper.dart';
 import '../shared/component.dart';
+import '../shared/constante.dart';
 import 'cubit/register_state.dart';
 
 class Register extends StatelessWidget {
@@ -22,22 +24,19 @@ class Register extends StatelessWidget {
       create: (BuildContext context) {
         return RegisterCubit();
       },
-      child: BlocProvider(
-        create: (BuildContext context) {
-          return RegisterCubit();
-        },
-        child: BlocConsumer<RegisterCubit, RegisterState>(
-          builder: (BuildContext context, state) {
-            return Scaffold(
-              appBar: AppBar(
-                  title: Text(
-                'Register',
-                style: Theme.of(context).textTheme.headline4,
-              )),
-              body: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Form(
-                  key: formKeyy,
+      child: BlocConsumer<RegisterCubit, RegisterState>(
+        builder: (BuildContext context, state) {
+          return Scaffold(
+            appBar: AppBar(
+                title: Text(
+              'Register',
+              style: Theme.of(context).textTheme.headline4,
+            )),
+            body: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: formKeyy,
+                child: SingleChildScrollView(
                   child: Column(children: [
                     defaultForm(
                         controller: emailController,
@@ -107,28 +106,19 @@ class Register extends StatelessWidget {
                     ),
                     ConditionalBuilder(
                       builder: (BuildContext context) {
-                        return ConditionalBuilder(
-                          builder: (BuildContext context) {
-                            return TextButton(
-                                onPressed: () {
-                                  if (formKeyy.currentState!.validate()) {
-                                    RegisterCubit.get(context).firstRegister(
-                                        emailController.text,
-                                        passwordController.text,
-                                        name: nameController.text,
-                                        phone: phoneController.text);
-                                  }
-                                },
-                                child: const Text('Register'));
-                          },
-                          condition: state is! LodinFirstRegisterState,
-                          fallback: (BuildContext context) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          },
-                        );
+                        return TextButton(
+                            onPressed: () {
+                              if (formKeyy.currentState!.validate()) {
+                                RegisterCubit.get(context).firstRegister(
+                                    emailController.text,
+                                    passwordController.text,
+                                    name: nameController.text,
+                                    phone: phoneController.text);
+                              }
+                            },
+                            child: const Text('Register'));
                       },
-                      condition: true,
+                      condition: state is! LodinFirstRegisterState,
                       fallback: (BuildContext context) {
                         return const Center(child: CircularProgressIndicator());
                       },
@@ -136,26 +126,29 @@ class Register extends StatelessWidget {
                   ]),
                 ),
               ),
-            );
-          },
-          listener: (BuildContext context, Object? state) {
-            if (state is BadFirstRegisterState) {
-              Fluttertoast.showToast(
-                  msg: state.e,
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.red,
-                  textColor: Colors.white,
-                  fontSize: 16.0);
-            } else if (state is GoodCreateRegisterState) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Home()),
-                  (route) => false);
-            }
-          },
-        ),
+            ),
+          );
+        },
+        listener: (BuildContext context, Object? state) {
+          if (state is BadFirstRegisterState) {
+            Fluttertoast.showToast(
+                msg: state.e,
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          } else if (state is GoodCreateRegisterState) {
+            CachHelper.putcache(key: 'uid', value: state.uid);
+
+            UID = state.uid;
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const Home()),
+                (route) => false);
+          }
+        },
       ),
     );
   }

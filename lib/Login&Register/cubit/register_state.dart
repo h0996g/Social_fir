@@ -18,7 +18,11 @@ class BadFirstRegisterState extends RegisterState {
 
 // class LodinCreateUserState extends RegisterState {}
 
-class GoodCreateRegisterState extends RegisterState {}
+class GoodCreateRegisterState extends RegisterState {
+  final uid;
+
+  GoodCreateRegisterState(this.uid);
+}
 
 class BadCreateRegisterState extends RegisterState {
   final e;

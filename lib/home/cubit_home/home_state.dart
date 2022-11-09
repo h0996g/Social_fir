@@ -10,3 +10,11 @@ class GoodUserGetState extends HomeState {
 }
 
 class BadUserGetState extends HomeState {}
+
+class ChangeNaveState extends HomeState {}
+
+class ChangeNaveToAddPostState extends HomeState {}
+
+class GoodSelectGaleryImage extends HomeState {}
+
+class BadSelectGaleryImage extends HomeState {}

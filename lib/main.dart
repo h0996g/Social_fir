@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:firbase_app/Login&Register/cubit/login_cubit.dart';
 import 'package:firbase_app/Login&Register/login.dart';
 import 'package:firbase_app/cache/cache_helper.dart';
@@ -16,6 +15,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await CachHelper.init();
+  // await CachHelper.remove(key: 'uid');
   Widget widget;
   UID = CachHelper.getData(key: 'uid') ?? '';
   if (UID != '') {
@@ -39,6 +39,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: ((context) => HomeCubit()..getUserInfo()))
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            textTheme: const TextTheme(
+                bodyText1: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                headline5:
+                    TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
         home: startWidget,
       ),
     );
