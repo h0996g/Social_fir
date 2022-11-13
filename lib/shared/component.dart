@@ -19,7 +19,7 @@ Widget defaultForm({
       // },
       textInputAction: textInputAction,
       onFieldSubmitted: (k) {
-        onFieldSubmitted!();
+        onFieldSubmitted!(k);
       },
       validator: (String? value) {
         return valid(value);
@@ -35,20 +35,18 @@ Widget defaultForm({
     );
 
 PreferredSizeWidget defaultAppBar(
-        {@required context, String? title, List<Widget>? action}) =>
+        {@required context,
+        String? title,
+        List<Widget>? action,
+        IconButton? leading}) =>
     AppBar(
+      elevation: 0,
       backgroundColor: Colors.white,
       title: Text(
         title!,
         style: TextStyle(color: Colors.black, fontSize: 27),
       ),
-      leading: IconButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: const Icon(IconBroken.Arrow___Left_2),
-        color: Colors.black,
-      ),
+      leading: leading,
       actions: action,
       titleSpacing: 0.0,
     );
